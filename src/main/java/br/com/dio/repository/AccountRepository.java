@@ -3,8 +3,13 @@ package br.com.dio.repository;
 import br.com.dio.expcetion.AccountNotFoundException;
 import br.com.dio.expcetion.PixinUseException;
 import br.com.dio.model.AccountWallet;
+import br.com.dio.model.MoneyAudit;
 
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static br.com.dio.repository.CommonsRepository.checkFundsForTransaction;
 
@@ -50,8 +55,14 @@ public class AccountRepository {
                 .orElseThrow(() -> new AccountNotFoundException("A conta com a chave pix " + pix + "Não existe"));
     }
 
-    public List<AccountWallet> List(){
+    public List<AccountWallet> list(){
         return this.accounts;
+    }
+
+    public Map<OffsetDateTime, List<MoneyAudit>> getHistory(final String pix){
+        var wallet = findByPix(pix);
+        var audit = wallet.getFinancialTransactions();
+        return audit.stream().collect(Collectors.groupingBy(t-> t.createdAt().truncatedTo(ChronoUnit.SECONDS)));
     }
 
 

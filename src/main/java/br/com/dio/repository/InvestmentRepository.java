@@ -17,7 +17,7 @@ public class InvestmentRepository {
 
     private long nextId;
     private final List<Investment> investments = new ArrayList<>();
-    private final List<InvestmentWallet> wallets = new ArrayList<>();
+    private static final List<InvestmentWallet> wallets = new ArrayList<>();
 
 
 
@@ -41,7 +41,7 @@ public class InvestmentRepository {
         return wallet;
     }
 
-    public InvestmentWallet deposit(final String pix, final long funds){
+    public static InvestmentWallet deposit(final String pix, final long funds){
         var wallet = findWalletByAccountPix(pix);
         wallet.addMoney(wallet.getAccount().reduceMoney(funds), wallet.getService(), "Investimento");
         return wallet;
@@ -57,8 +57,8 @@ public class InvestmentRepository {
         return wallet;
     }
 
-    public void updateAmount(final long percent){
-        wallets.forEach(w-> w.updateAmount(percent));
+    public void updateAmount(){
+        wallets.forEach(w-> w.updateAmount(w.getInvestment().tax()));
 
     }
 
@@ -75,7 +75,7 @@ public class InvestmentRepository {
         return this.wallets;
     }
 
-    public InvestmentWallet findWalletByAccountPix(final String pix){
+    public static InvestmentWallet findWalletByAccountPix(final String pix){
         return wallets.stream().filter(w-> w.getAccount().getPix().contains(pix)).findFirst()
                 .orElseThrow(() -> new WalletNotFoundException("A carteira não foi encontrada"));
     }

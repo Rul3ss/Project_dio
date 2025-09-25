@@ -24,4 +24,11 @@ public class AccountWallet extends Wallet{
         var money = generateMoney(amount, description);
         this.money.addAll(money);
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "AccountWallet{" +
+                "pix=" + pix +
+                '}';
+    }
 }
