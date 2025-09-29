@@ -2,6 +2,7 @@ package br.com.dio;
 
 import br.com.dio.expcetion.AccountNotFoundException;
 import br.com.dio.expcetion.NoFundsEnoughException;
+import br.com.dio.expcetion.WalletNotFoundException;
 import br.com.dio.model.AccountWallet;
 import br.com.dio.repository.AccountRepository;
 import br.com.dio.repository.InvestmentRepository;
@@ -23,7 +24,7 @@ public class Main {
             System.out.println("Selecione a operação desejada");
             System.out.println("1 - Criar uma conta");
             System.out.println("2 - Criar um investimento");
-            System.out.println("3 - Fazer um investimento");
+            System.out.println("3 - Criar uma carteira de investimento investimento");
             System.out.println("4 - Depositar na conta");
             System.out.println("5 - Sacar da conta");
             System.out.println("6 - Transferência entre contas");
@@ -36,6 +37,7 @@ public class Main {
             System.out.println("13 - Histórico de contas");
             System.out.println("14 - Sair ");
             var option = scanner.nextInt();
+            scanner.nextLine();
             switch(option){
                 case 1:
                     createAccount();
@@ -158,7 +160,7 @@ public class Main {
         var amount = scanner.nextLong();
         try {
             InvestmentRepository.deposit(pix, amount);
-        } catch (AccountNotFoundException ex){
+        } catch (WalletNotFoundException | AccountNotFoundException ex){
             System.out.println(ex.getMessage());
         }
 
@@ -184,7 +186,7 @@ public class Main {
          sortedHistory.forEach((k,v) -> {System.out.println(k.format(DateTimeFormatter.ISO_DATE_TIME));
          System.out.println(v.getFirst().transactionId());
          System.out.println(v.getFirst().description());
-             System.out.println(v.size());
+             System.out.println("R$" + (v.size()/100) +"," + (v.size()%100));
 
          });
 
